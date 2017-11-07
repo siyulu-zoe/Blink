@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="C:\Users\Richard G. Huizar\Desktop\Blink\Blink_android\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="2fb9ead042b4da5d249bc64c21d93e0ec6082e4e">
+        <dex dex="C:\Users\Richard G. Huizar\Desktop\Blink\Blink_android\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_3e3e3cf49aed86f15a0ddf21e2864397efb00fc3\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Richard G. Huizar\Desktop\Blink\Blink_android\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="aa6602d5563ef63501858061d847ec3bedd5fd25">
+        <dex dex="C:\Users\Richard G. Huizar\Desktop\Blink\Blink_android\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_3959a0b65dc032ea02a82a45fa0cbaf542d4b3e2\classes.dex" />
+    </item>
+
+</items>
