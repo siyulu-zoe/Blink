@@ -86,16 +86,6 @@ void error(const __FlashStringHelper*err) {
   while (1);
 }
 
-int photo_resistor = 0;
-int light_threshold = 25;
-long start_time = 0;
-long old_time = 0;
-long new_time = 0;
-long time_blinking = 0;
-long intentional_threshold = 500;
-long long_threshold = 3000;
-boolean in_blink = false;
-
 /**************************************************************************/
 /*!
     @brief  Sets up the HW an the BLE module (this function is called
@@ -162,8 +152,6 @@ void setup(void)
   ble.setMode(BLUEFRUIT_MODE_DATA);
 
   Serial.println(F("******************************"));
-  start_time = millis();
-  delay(100);
 }
 
 /**************************************************************************/
@@ -173,38 +161,9 @@ void setup(void)
 /**************************************************************************/
 void loop(void)
 {
-  
-  photo_resistor = analogRead(A0);
-  if (photo_resistor < light_threshold) {
-    if (in_blink == false) {
-      old_time = millis();
-      in_blink = true;
-    }
-  }
-  else {
-    if (in_blink == true) {
-      in_blink = false;
-      new_time = millis();
-      time_blinking = new_time - old_time;
-      Serial.print(time_blinking); 
-      if (time_blinking > intentional_threshold) {
-        if (time_blinking > long_threshold) {
-          ble.print("up");
-          Serial.print("up");
-          delay(1000);
-        }
-        else {
-          ble.print("down");
-          Serial.print("down");
-          delay(1000);
-        }
-      }
-    }
-  }
-  Serial.println(photo_resistor);
-  //ble.print("test");
-  //Serial.print("test");
-  delay(250);
+  ble.print("test");
+  Serial.print("test");
+  delay(5000);
   // Check for user input
   char n, inputs[BUFSIZE+1];
 
@@ -234,43 +193,3 @@ void loop(void)
     Serial.print("] ");
   }
 }
-
-//boolean blink_calc(float l[]){
-//  
-//     if (l[0] < threshold) {
-//       // test each to see if second half is less than threshold and first half greater
-//       for (int n=0;n<size_l1-1;n++) {
-//        if (n<size_l1/2) {
-//         if (l[n]<threshold) {
-//            return false;
-//          }
-//        }
-//        else {
-//          if (l[n]>threshold) {
-//            return false;
-//          }
-//        }
-//       }
-//  
-//       //passes test
-//       return true;
-//     }
-//     else {
-//       // test each to see if second half is more than threshold and first half lesser
-//       for (int n=0;n<size_l1-1;n++) {
-//        if (n<size_l1/2) {
-//         if (l[n]>threshold) {
-//            return false;
-//          }
-//        }
-//        else {
-//          if (l[n]<threshold) {
-//            return false;
-//          }
-//        }
-//       }
-//  
-//       //passes test
-//       return true;
-//     }
-//}

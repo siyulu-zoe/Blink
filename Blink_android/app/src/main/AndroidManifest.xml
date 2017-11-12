@@ -22,6 +22,9 @@
             </intent-filter>
         </activity>
         <activity android:name="com.red.team.app.BlinkActivity"></activity>
+        <activity android:name="com.red.team.app.SecondActivity"></activity>
+        <activity android:name="com.red.team.app.ThirdActivity"></activity>
+        <activity android:name="com.red.team.app.FourthActivity"></activity>
     </application>
 
 </manifest>

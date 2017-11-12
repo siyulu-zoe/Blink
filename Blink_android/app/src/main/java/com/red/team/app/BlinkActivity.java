@@ -16,12 +16,18 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import android.speech.tts.TextToSpeech;
+import android.widget.Toast;
+import java.util.Locale;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import android.os.Handler;
 
 public class BlinkActivity extends Activity {
 
@@ -42,16 +48,22 @@ public class BlinkActivity extends Activity {
     private BluetoothGattCharacteristic tx;
     private BluetoothGattCharacteristic rx;
 
+    //renaming TextToSpeech to t1 (shorter)
+    TextToSpeech t1;
+
     // OnCreate, called once to initialize the activity.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.blink_activity);
+
 
         // Grab references to UI elements.
         messages = (TextView) findViewById(R.id.messages);
         final ListView listview = (ListView) findViewById(R.id.actions);
-        String[] values = new String[] { "Lights", "TV", "Music"};
+        String[] values = new String[] { "Light 1", "Light 2", "TV"};
         final ArrayList<String> list = new ArrayList<String>();
         for (int i = 0; i < values.length; ++i) {
             list.add(values[i]);
@@ -60,24 +72,67 @@ public class BlinkActivity extends Activity {
                 android.R.layout.simple_list_item_1, list);
         listview.setAdapter(list_adapter);
 
+        // setting up the speech
+
+        t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR){
+                    t1.setLanguage(Locale.UK);
+                }
+            }
+        });
+        final Handler handler = new Handler();
+
+        handler.postDelayed(new Runnable(){
+            @Override
+            public void run(){
+                String Test1 = "Blink now to control the first light";
+                Toast.makeText(getApplicationContext(),Test1,Toast.LENGTH_SHORT).show();
+                t1.speak(Test1,TextToSpeech.QUEUE_FLUSH,null);
+            }
+        }, 500);
+
+
+
+
+
+
+
+        //switch code
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+
                 final String item = (String) parent.getItemAtPosition(position);
                 switch(item) {
-                    case "Lights":
-                        break;
+                    case "Light 1":
+//                        Intent second_intent = new Intent(BlinkActivity.this , SecondActivity.class);
+//                        startActivity(second_intent);
+                        messages = (TextView) findViewById(R.id.messages);
+                        final ListView listview = (ListView) findViewById(R.id.actions);
+                        String[] values = new String[] { "On","Off", "Dim","Bright"};
+                        final ArrayList<String> list = new ArrayList<String>();
+                        for (int i = 0; i < values.length; ++i) {
+                            list.add(values[i]);
+                        }
+                        final StableArrayAdapter list_adapter = new StableArrayAdapter(getBaseContext(),
+                                android.R.layout.simple_list_item_1, list);
+                        listview.setAdapter(list_adapter);
+
+                    case "Light 2":
+//                        Intent third_intent = new Intent(BlinkActivity.this , ThirdActivity.class);
+//                        startActivity(third_intent);
                     case "TV":
-                        break;
-                    case "Music":
-                        break;
+//                        Intent fourth_intent = new Intent(BlinkActivity.this , FourthActivity.class);
+//                        startActivity(fourth_intent);
                 }
             }
 
         });
 
-        adapter = BluetoothAdapter.getDefaultAdapter();
+        //adapter = BluetoothAdapter.getDefaultAdapter();
     }
 
     // Main BTLE device callback where much of the logic occurs.
@@ -140,6 +195,7 @@ public class BlinkActivity extends Activity {
             super.onCharacteristicChanged(gatt, characteristic);
             writeLine("Received: " + characteristic.getStringValue(0));
             //HAVE APIS CALLED HERE WHEN THE CERTAIN STRING IS GIVEN//
+
         }
     };
 
@@ -167,8 +223,8 @@ public class BlinkActivity extends Activity {
         super.onResume();
         // Scan for all BTLE devices.
         // The first one with the UART service will be chosen--see the code in the scanCallback.
-        messages.setText("Scanning for devices...");
-        adapter.startLeScan(scanCallback);
+        //messages.setText("Scanning for devices...");
+        //adapter.startLeScan(scanCallback);
     }
 
     // OnStop, called right before the activity loses foreground focus.  Close the BTLE connection.
