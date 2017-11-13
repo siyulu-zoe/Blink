@@ -9,7 +9,10 @@ import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
+import android.speech.tts.UtteranceProgressListener;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -18,6 +21,8 @@ import android.widget.TextView;
 
 import android.speech.tts.TextToSpeech;
 import android.widget.Toast;
+
+import java.util.HashMap;
 import java.util.Locale;
 
 import java.nio.ByteBuffer;
@@ -28,6 +33,9 @@ import java.util.List;
 import java.util.UUID;
 
 import android.os.Handler;
+
+import static android.bluetooth.BluetoothGattCharacteristic.FORMAT_FLOAT;
+import static android.bluetooth.BluetoothGattCharacteristic.FORMAT_UINT16;
 
 public class BlinkActivity extends Activity {
 
@@ -48,6 +56,18 @@ public class BlinkActivity extends Activity {
     private BluetoothGattCharacteristic tx;
     private BluetoothGattCharacteristic rx;
 
+    private String[] values;
+    private ArrayList<String> list;
+    private ListView listview;
+    private int current_list_value;
+    private int current_list_size;
+    private String current_list_item;
+    private Boolean click = false;
+    private Boolean reading = false;
+    private Boolean action = false;
+    private Boolean ready = false;
+    private StableArrayAdapter list_adapter;
+
     //renaming TextToSpeech to t1 (shorter)
     TextToSpeech t1;
 
@@ -62,40 +82,40 @@ public class BlinkActivity extends Activity {
 
         // Grab references to UI elements.
         messages = (TextView) findViewById(R.id.messages);
-        final ListView listview = (ListView) findViewById(R.id.actions);
-        String[] values = new String[] { "Light 1", "Light 2", "TV"};
-        final ArrayList<String> list = new ArrayList<String>();
+        listview = (ListView) findViewById(R.id.actions);
+        values = new String[] { "Light 1", "Light 2", "TV", "End"};
+        list = new ArrayList<String>();
         for (int i = 0; i < values.length; ++i) {
             list.add(values[i]);
         }
-        final StableArrayAdapter list_adapter = new StableArrayAdapter(this,
+        list_adapter = new StableArrayAdapter(this,
                 android.R.layout.simple_list_item_1, list);
+        list_adapter.notifyDataSetChanged();
         listview.setAdapter(list_adapter);
-
-        // setting up the speech
-
+        current_list_size = values.length;
+        current_list_value = 0;
+        current_list_item = values[current_list_value];
         t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if(status != TextToSpeech.ERROR){
                     t1.setLanguage(Locale.UK);
                 }
+                t1.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                    @Override
+                    public void onStart(String utteranceId) {
+                    }
+                    @Override
+                    public void onDone(String utteranceId) {
+                        ready = true;
+                    }
+
+                    @Override
+                    public void onError(String utteranceId) {
+                    }
+                });
             }
         });
-        final Handler handler = new Handler();
-
-        handler.postDelayed(new Runnable(){
-            @Override
-            public void run(){
-                String Test1 = "Blink now to control the first light";
-                Toast.makeText(getApplicationContext(),Test1,Toast.LENGTH_SHORT).show();
-                t1.speak(Test1,TextToSpeech.QUEUE_FLUSH,null);
-            }
-        }, 500);
-
-
-
-
 
 
 
@@ -104,36 +124,15 @@ public class BlinkActivity extends Activity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-
                 final String item = (String) parent.getItemAtPosition(position);
-                switch(item) {
-                    case "Light 1":
-//                        Intent second_intent = new Intent(BlinkActivity.this , SecondActivity.class);
-//                        startActivity(second_intent);
-                        messages = (TextView) findViewById(R.id.messages);
-                        final ListView listview = (ListView) findViewById(R.id.actions);
-                        String[] values = new String[] { "On","Off", "Dim","Bright"};
-                        final ArrayList<String> list = new ArrayList<String>();
-                        for (int i = 0; i < values.length; ++i) {
-                            list.add(values[i]);
-                        }
-                        final StableArrayAdapter list_adapter = new StableArrayAdapter(getBaseContext(),
-                                android.R.layout.simple_list_item_1, list);
-                        listview.setAdapter(list_adapter);
-
-                    case "Light 2":
-//                        Intent third_intent = new Intent(BlinkActivity.this , ThirdActivity.class);
-//                        startActivity(third_intent);
-                    case "TV":
-//                        Intent fourth_intent = new Intent(BlinkActivity.this , FourthActivity.class);
-//                        startActivity(fourth_intent);
-                }
+                action(item);
             }
-
         });
 
-        //adapter = BluetoothAdapter.getDefaultAdapter();
+        adapter = BluetoothAdapter.getDefaultAdapter();
+
     }
+
 
     // Main BTLE device callback where much of the logic occurs.
     private BluetoothGattCallback callback = new BluetoothGattCallback() {
@@ -193,11 +192,41 @@ public class BlinkActivity extends Activity {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             super.onCharacteristicChanged(gatt, characteristic);
-            writeLine("Received: " + characteristic.getStringValue(0));
-            //HAVE APIS CALLED HERE WHEN THE CERTAIN STRING IS GIVEN//
+            String va = characteristic.getStringValue(0);
+            writeLine("Received: " + va);
+            if (va.length() < 4) {
+                if (reading == false) {
+                    reading = true;
+                    ready = true;
+                    new main_thread().execute();
+                }
+                else {
+                    reading = false;
+                    action("End");
+                }
+            }
+            else {
+                if (reading == true) {
+                    action = true;
+                }
+                else {
+
+                }
+
+            }
 
         }
     };
+
+    // OnResume, called right before UI is displayed.  Start the BTLE connection.
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Scan for all BTLE devices.
+        // The first one with the UART service will be chosen--see the code in the scanCallback.
+        messages.setText("Scanning for devices...");
+        adapter.startLeScan(scanCallback);
+    }
 
     // BTLE device scanning callback.
     private LeScanCallback scanCallback = new LeScanCallback() {
@@ -217,15 +246,6 @@ public class BlinkActivity extends Activity {
         }
     };
 
-    // OnResume, called right before UI is displayed.  Start the BTLE connection.
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Scan for all BTLE devices.
-        // The first one with the UART service will be chosen--see the code in the scanCallback.
-        //messages.setText("Scanning for devices...");
-        //adapter.startLeScan(scanCallback);
-    }
 
     // OnStop, called right before the activity loses foreground focus.  Close the BTLE connection.
     @Override
@@ -323,5 +343,81 @@ public class BlinkActivity extends Activity {
         }
         return uuids;
     }
+
+    private void read_list() {
+        String Test1 = current_list_item;
+        Bundle params = new Bundle();
+        params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "test");
+        t1.speak(Test1,TextToSpeech.QUEUE_FLUSH, params,"test");
+        ready = false;
+    }
+
+    private void action(String selected_value) {
+        switch (selected_value) {
+            case "Light 1":
+                values = new String[] { "On","Off", "Dim","Bright","Back"};
+                break;
+            case "Light 2":
+                values = new String[] { "On","Off", "Dim","Bright","Back"};
+                break;
+            case "TV":
+                values = new String[] { "On","Off", "Channel Up","Channel Down","Back"};
+                break;
+            case "Back":
+                values = new String[] { "Light 1", "Light 2", "TV", "End"};
+                break;
+            case "End":
+                values = new String[] { "Light 1", "Light 2", "TV", "End"};
+                reading = false;
+                break;
+        }
+
+        list = new ArrayList<String>();
+        for (int i = 0; i < values.length; ++i) {
+            list.add(values[i]);
+        }
+        list_adapter = new StableArrayAdapter(getBaseContext(),
+                android.R.layout.simple_list_item_1, list);
+        current_list_value = 0;
+        current_list_size = values.length;
+        current_list_item = values[current_list_value];
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                listview.setAdapter(list_adapter);
+            }
+        });
+    }
+
+    private class main_thread extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+            while (reading==true){
+                while (ready == false) {
+                }
+                read_list();
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (action == false) {
+                    if (current_list_value == current_list_size - 1) {
+                        current_list_value = 0;
+                    } else {
+                        current_list_value = current_list_value + 1;
+
+                    }
+                    current_list_item = values[current_list_value];
+
+                } else {
+                    action(current_list_item);
+                    action = false;
+                }
+            }
+            return null;
+        }
+    }
+
 
 }

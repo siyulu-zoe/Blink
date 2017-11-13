@@ -1,12 +1,9 @@
 /*********************************************************************
  This is an example for our nRF51822 based Bluefruit LE modules
-
  Pick one up today in the adafruit shop!
-
  Adafruit invests time and resources providing this open source code,
  please support Adafruit and open-source hardware by purchasing
  products from Adafruit!
-
  MIT license, check LICENSE for more information
  All text above, and the splash screen below must be included in
  any redistribution
@@ -26,25 +23,24 @@
 
 /*=========================================================================
     APPLICATION SETTINGS
-
-    FACTORYRESET_ENABLE       Perform a factory reset when running this sketch
-   
-                              Enabling this will put your Bluefruit LE module
+â€‚ â€‚ FACTORYRESET_ENABLEâ€‚   â€‚  Perform a factory reset when running this sketch
+â€‚ â€‚
+â€‚ â€‚                           Enabling this will put your Bluefruit LE module
                               in a 'known good' state and clear any config
                               data set in previous sketches or projects, so
-                              running this at least once is a good idea.
-   
-                              When deploying your project, however, you will
+â€‚ â€‚                           running this at least once is a good idea.
+â€‚ â€‚
+â€‚ â€‚                           When deploying your project, however, you will
                               want to disable factory reset by setting this
-                              value to 0.  If you are making changes to your
-                              Bluefruit LE device via AT commands, and those
+                              value to 0.â€‚ If you are making changes to your
+â€‚ â€‚                           Bluefruit LE device via AT commands, and those
                               changes aren't persisting across resets, this
-                              is the reason why.  Factory reset will erase
+                              is the reason why.â€‚ Factory reset will erase
                               the non-volatile memory where config data is
                               stored, setting it back to factory default
                               values.
-       
-                              Some sketches that require you to bond to a
+â€‚ â€‚ â€‚ â€‚
+â€‚ â€‚                           Some sketches that require you to bond to a
                               central device (HID mouse, keyboard, etc.)
                               won't work at all with this feature enabled
                               since the factory reset will clear all of the
@@ -63,7 +59,6 @@
 // Create the bluefruit object, either software serial...uncomment these lines
 /*
 SoftwareSerial bluefruitSS = SoftwareSerial(BLUEFRUIT_SWUART_TXD_PIN, BLUEFRUIT_SWUART_RXD_PIN);
-
 Adafruit_BluefruitLE_UART ble(bluefruitSS, BLUEFRUIT_UART_MODE_PIN,
                       BLUEFRUIT_UART_CTS_PIN, BLUEFRUIT_UART_RTS_PIN);
 */
@@ -85,6 +80,16 @@ void error(const __FlashStringHelper*err) {
   Serial.println(err);
   while (1);
 }
+
+int photo_resistor = 0;
+int light_threshold = 25;
+long start_time = 0;
+long old_time = 0;
+long new_time = 0;
+long time_blinking = 0;
+long intentional_threshold = 500;
+long long_threshold = 3000;
+boolean in_blink = false;
 
 /**************************************************************************/
 /*!
@@ -152,6 +157,8 @@ void setup(void)
   ble.setMode(BLUEFRUIT_MODE_DATA);
 
   Serial.println(F("******************************"));
+  start_time = millis();
+  delay(100);
 }
 
 /**************************************************************************/
@@ -161,9 +168,38 @@ void setup(void)
 /**************************************************************************/
 void loop(void)
 {
-  ble.print("test");
-  Serial.print("test");
-  delay(5000);
+  
+  photo_resistor = analogRead(A0);
+  if (photo_resistor < light_threshold) {
+    if (in_blink == false) {
+      old_time = millis();
+      in_blink = true;
+    }
+  }
+  else {
+    if (in_blink == true) {
+      in_blink = false;
+      new_time = millis();
+      time_blinking = new_time - old_time;
+      Serial.print(time_blinking); 
+      if (time_blinking > intentional_threshold) {
+        if (time_blinking > long_threshold) {
+          ble.print("up");
+          Serial.print("up");
+          delay(1000);
+        }
+        else {
+          ble.print("down");
+          Serial.print("down");
+          delay(1000);
+        }
+      }
+    }
+  }
+  Serial.println(photo_resistor);
+  //ble.print("test");
+  //Serial.print("test");
+  delay(250);
   // Check for user input
   char n, inputs[BUFSIZE+1];
 
@@ -193,3 +229,44 @@ void loop(void)
     Serial.print("] ");
   }
 }
+
+//boolean blink_calc(float l[]){
+//  
+//     if (l[0] < threshold) {
+//       // test each to see if second half is less than threshold and first half greater
+//       for (int n=0;n<size_l1-1;n++) {
+//        if (n<size_l1/2) {
+//         if (l[n]<threshold) {
+//            return false;
+//          }
+//        }
+//        else {
+//          if (l[n]>threshold) {
+//            return false;
+//          }
+//        }
+//       }
+//  
+//       //passes test
+//       return true;
+//     }
+//     else {
+//       // test each to see if second half is more than threshold and first half lesser
+//       for (int n=0;n<size_l1-1;n++) {
+//        if (n<size_l1/2) {
+//         if (l[n]>threshold) {
+//            return false;
+//          }
+//        }
+//        else {
+//          if (l[n]<threshold) {
+//            return false;
+//          }
+//        }
+//       }
+//  
+//       //passes test
+//       return true;
+//     }
+//}
+
