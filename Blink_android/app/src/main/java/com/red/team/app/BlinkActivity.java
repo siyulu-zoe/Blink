@@ -358,10 +358,10 @@ public class BlinkActivity extends Activity {
         Bundle params = new Bundle();
         params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "command");
         switch (input) {
-            case "On":
+            case "Lights On":
                 Command += "turn on the light.";
                 break;
-            case "Off":
+            case "Lights Off":
                 Command += "turn off the light.";
                 break;
             case "Bright":
@@ -369,6 +369,18 @@ public class BlinkActivity extends Activity {
                 break;
             case "Dim":
                 Command += "dim the light.";
+                break;
+            case "TV On":
+                Command += "turn on the TV.";
+                break;
+            case "TV Off":
+                Command += "turn off the TV.";
+                break;
+            case "Channel Up":
+                Command += "go to the next channel on the TV.";
+                break;
+            case "Channel Down":
+                Command += "go to the previous channel on the TV.";
                 break;
         }
         t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
@@ -378,22 +390,24 @@ public class BlinkActivity extends Activity {
     private void action(String selected_value) {
         switch (selected_value) {
             case "Light 1":
-                leaf = true;
-                values = new String[] { "On","Off", "Dim","Bright","Back"};
+                values = new String[] { "Lights On","Lights Off", "Dim","Bright","Back"};
                 break;
             case "Light 2":
-                leaf = true;
-                values = new String[] { "On","Off", "Dim","Bright","Back"};
+                values = new String[] { "Lights On","Lights Off", "Dim","Bright","Back"};
                 break;
             case "TV":
-                leaf = true;
-                values = new String[] { "On","Off", "Channel Up","Channel Down","Back"};
+                values = new String[] { "TV On","TV Off", "Channel Up","Channel Down","Back"};
                 break;
             case "Back":
                 values = new String[] { "Light 1", "Light 2", "TV", "End"};
                 break;
             case "End":
                 values = new String[] { "Light 1", "Light 2", "TV", "End"};
+                reading = false;
+                break;
+            default:
+                values = new String[] { "Light 1", "Light 2", "TV", "End"};
+                read_command(selected_value,"Google");
                 reading = false;
                 break;
         }
@@ -421,11 +435,12 @@ public class BlinkActivity extends Activity {
             while (reading==true){
                 while (ready == false) {
                 }
-                if (leaf == false) {
+ //               if (leaf == false) {
                     read_list();
-                } else {
+/*                } else {
                     read_command(current_list_item, "Google");
-                }
+                    action("END");
+                }*/
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
