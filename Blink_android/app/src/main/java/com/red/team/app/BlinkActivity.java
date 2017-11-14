@@ -66,6 +66,7 @@ public class BlinkActivity extends Activity {
     private Boolean reading = false;
     private Boolean action = false;
     private Boolean ready = false;
+    private Boolean leaf = false;
     private StableArrayAdapter list_adapter;
 
     //renaming TextToSpeech to t1 (shorter)
@@ -352,15 +353,40 @@ public class BlinkActivity extends Activity {
         ready = false;
     }
 
+    private void read_command(String input, String smart_home_device) {
+        String Command = "Hey " + smart_home_device + ", ";
+        Bundle params = new Bundle();
+        params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "command");
+        switch (input) {
+            case "On":
+                Command += "turn on the light.";
+                break;
+            case "Off":
+                Command += "turn off the light.";
+                break;
+            case "Bright":
+                Command += "brighten the light.";
+                break;
+            case "Dim":
+                Command += "dim the light.";
+                break;
+        }
+        t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
+        ready = false;
+    }
+
     private void action(String selected_value) {
         switch (selected_value) {
             case "Light 1":
+                leaf = true;
                 values = new String[] { "On","Off", "Dim","Bright","Back"};
                 break;
             case "Light 2":
+                leaf = true;
                 values = new String[] { "On","Off", "Dim","Bright","Back"};
                 break;
             case "TV":
+                leaf = true;
                 values = new String[] { "On","Off", "Channel Up","Channel Down","Back"};
                 break;
             case "Back":
@@ -395,7 +421,11 @@ public class BlinkActivity extends Activity {
             while (reading==true){
                 while (ready == false) {
                 }
-                read_list();
+                if (leaf == false) {
+                    read_list();
+                } else {
+                    read_command(current_list_item, "Google");
+                }
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
