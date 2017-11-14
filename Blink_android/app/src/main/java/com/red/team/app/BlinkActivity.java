@@ -68,18 +68,13 @@ public class BlinkActivity extends Activity {
     private Boolean ready = false;
     private Boolean leaf = false;
     private StableArrayAdapter list_adapter;
-
-    //renaming TextToSpeech to t1 (shorter)
-    TextToSpeech t1;
+    private TextToSpeech t1;
 
     // OnCreate, called once to initialize the activity.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.blink_activity);
-
 
         // Grab references to UI elements.
         messages = (TextView) findViewById(R.id.messages);
@@ -118,20 +113,15 @@ public class BlinkActivity extends Activity {
             }
         });
 
-
-
         //switch code
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                 final String item = (String) parent.getItemAtPosition(position);
                 action(item);
             }
         });
-
         adapter = BluetoothAdapter.getDefaultAdapter();
-
     }
 
 
@@ -157,8 +147,6 @@ public class BlinkActivity extends Activity {
         }
 
         // Called when services have been discovered on the remote device.
-        // It seems to be necessary to wait for this discovery to occur before
-        // manipulating any services or characteristics.
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             super.onServicesDiscovered(gatt, status);
@@ -211,11 +199,8 @@ public class BlinkActivity extends Activity {
                     action = true;
                 }
                 else {
-
                 }
-
             }
-
         }
     };
 
@@ -327,8 +312,6 @@ public class BlinkActivity extends Activity {
                             uuids.add(new UUID(leastSignificantBit,
                                     mostSignificantBit));
                         } catch (IndexOutOfBoundsException e) {
-                            // Defensive programming.
-                            //Log.e(LOG_TAG, e.toString());
                             continue;
                         } finally {
                             // Move the offset to read the next uuid.
@@ -344,7 +327,8 @@ public class BlinkActivity extends Activity {
         }
         return uuids;
     }
-
+    
+    // Loop through cascading menu options. Stop reading once a blink is registered.
     private void read_list() {
         String Test1 = current_list_item;
         Bundle params = new Bundle();
@@ -352,23 +336,36 @@ public class BlinkActivity extends Activity {
         t1.speak(Test1,TextToSpeech.QUEUE_FLUSH, params,"test");
         ready = false;
     }
-
+    
+    // Voice commands to smart home device.
     private void read_command(String input, String smart_home_device) {
         String Command = "Hey " + smart_home_device + ", ";
         Bundle params = new Bundle();
         params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "command");
         switch (input) {
-            case "Lights On":
-                Command += "turn on the light.";
+            case "Light 1 On":
+                Command += "turn on light 1.";
                 break;
-            case "Lights Off":
-                Command += "turn off the light.";
+            case "Light 1 Off":
+                Command += "turn off light 1.";
                 break;
-            case "Bright":
-                Command += "brighten the light.";
+            case "Brighten Light 1":
+                Command += "brighten light 1.";
                 break;
-            case "Dim":
-                Command += "dim the light.";
+            case "Dim Light 1":
+                Command += "dim light 1.";
+                break;
+            case "Light 2 On":
+                Command += "turn on light 2.";
+                break;
+            case "Light 2 Off":
+                Command += "turn off light 2.";
+                break;
+            case "Brighten Light 2":
+                Command += "brighten light 2.";
+                break;
+            case "Dim Light 2":
+                Command += "dim light 2.";
                 break;
             case "TV On":
                 Command += "turn on the TV.";
@@ -386,14 +383,15 @@ public class BlinkActivity extends Activity {
         t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
         ready = false;
     }
-
+    
+    // Cascading menu options
     private void action(String selected_value) {
         switch (selected_value) {
             case "Light 1":
-                values = new String[] { "Lights On","Lights Off", "Dim","Bright","Back"};
+                values = new String[] { "Light 1 On","Light 1 Off", "Dim Light 1","Brighten Light 1","Back"};
                 break;
             case "Light 2":
-                values = new String[] { "Lights On","Lights Off", "Dim","Bright","Back"};
+                values = new String[] { "Light 2 On","Light 2 Off", "Dim Light 2","Brighten Light 2","Back"};
                 break;
             case "TV":
                 values = new String[] { "TV On","TV Off", "Channel Up","Channel Down","Back"};
@@ -407,7 +405,7 @@ public class BlinkActivity extends Activity {
                 break;
             default:
                 values = new String[] { "Light 1", "Light 2", "TV", "End"};
-                read_command(selected_value,"Google");
+                read_command(selected_value,"Google"); //"Google" can be switched to "Alexa"
                 reading = false;
                 break;
         }
@@ -435,12 +433,7 @@ public class BlinkActivity extends Activity {
             while (reading==true){
                 while (ready == false) {
                 }
- //               if (leaf == false) {
                     read_list();
-/*                } else {
-                    read_command(current_list_item, "Google");
-                    action("END");
-                }*/
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
@@ -463,6 +456,4 @@ public class BlinkActivity extends Activity {
             return null;
         }
     }
-
-
 }
