@@ -11,31 +11,22 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.speech.tts.UtteranceProgressListener;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import android.speech.tts.TextToSpeech;
-import android.widget.Toast;
+import android.net.Uri;
 
-import java.util.HashMap;
 import java.util.Locale;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import android.os.Handler;
-
-import static android.bluetooth.BluetoothGattCharacteristic.FORMAT_FLOAT;
-import static android.bluetooth.BluetoothGattCharacteristic.FORMAT_UINT16;
 
 public class BlinkActivity extends Activity {
 
@@ -79,7 +70,7 @@ public class BlinkActivity extends Activity {
         // Grab references to UI elements.
         messages = (TextView) findViewById(R.id.messages);
         listview = (ListView) findViewById(R.id.actions);
-        values = new String[] { "Light 1", "Light 2", "TV", "End"};
+        values = new String[] { "Light 1", "Light 2", "TV", "Call for Nurse", "End"};
         list = new ArrayList<String>();
         for (int i = 0; i < values.length; ++i) {
             list.add(values[i]);
@@ -113,15 +104,20 @@ public class BlinkActivity extends Activity {
             }
         });
 
+
+
         //switch code
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                 final String item = (String) parent.getItemAtPosition(position);
                 action(item);
             }
         });
+
         adapter = BluetoothAdapter.getDefaultAdapter();
+
     }
 
 
@@ -147,6 +143,8 @@ public class BlinkActivity extends Activity {
         }
 
         // Called when services have been discovered on the remote device.
+        // It seems to be necessary to wait for this discovery to occur before
+        // manipulating any services or characteristics.
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             super.onServicesDiscovered(gatt, status);
@@ -232,7 +230,6 @@ public class BlinkActivity extends Activity {
         }
     };
 
-
     // OnStop, called right before the activity loses foreground focus.  Close the BTLE connection.
     @Override
     protected void onStop() {
@@ -312,6 +309,8 @@ public class BlinkActivity extends Activity {
                             uuids.add(new UUID(leastSignificantBit,
                                     mostSignificantBit));
                         } catch (IndexOutOfBoundsException e) {
+                            // Defensive programming.
+                            //Log.e(LOG_TAG, e.toString());
                             continue;
                         } finally {
                             // Move the offset to read the next uuid.
@@ -327,8 +326,7 @@ public class BlinkActivity extends Activity {
         }
         return uuids;
     }
-    
-    // Loop through cascading menu options. Stop reading once a blink is registered.
+
     private void read_list() {
         String Test1 = current_list_item;
         Bundle params = new Bundle();
@@ -336,8 +334,7 @@ public class BlinkActivity extends Activity {
         t1.speak(Test1,TextToSpeech.QUEUE_FLUSH, params,"test");
         ready = false;
     }
-    
-    // Voice commands to smart home device.
+
     private void read_command(String input, String smart_home_device) {
         String Command = "Hey " + smart_home_device + ", ";
         Bundle params = new Bundle();
@@ -383,8 +380,7 @@ public class BlinkActivity extends Activity {
         t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
         ready = false;
     }
-    
-    // Cascading menu options
+
     private void action(String selected_value) {
         switch (selected_value) {
             case "Light 1":
@@ -396,15 +392,25 @@ public class BlinkActivity extends Activity {
             case "TV":
                 values = new String[] { "TV On","TV Off", "Channel Up","Channel Down","Back"};
                 break;
+            case "Call for Nurse":
+                Bundle params = new Bundle();
+                params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "call");
+                t1.speak("Calling the nurse",TextToSpeech.QUEUE_FLUSH, params,"call");
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                // Insert real phone number here.
+                callIntent.setData(Uri.parse("tel:123456789"));
+                startActivity(callIntent);
+                ready = false;
+                break;
             case "Back":
-                values = new String[] { "Light 1", "Light 2", "TV", "End"};
+                values = new String[] { "Light 1", "Light 2", "TV", "Call for Nurse", "End"};
                 break;
             case "End":
-                values = new String[] { "Light 1", "Light 2", "TV", "End"};
+                values = new String[] { "Light 1", "Light 2", "TV", "Call for Nurse", "End"};
                 reading = false;
                 break;
             default:
-                values = new String[] { "Light 1", "Light 2", "TV", "End"};
+                values = new String[] { "Light 1", "Light 2", "TV", "Call for Nurse", "End"};
                 read_command(selected_value,"Google"); //"Google" can be switched to "Alexa"
                 reading = false;
                 break;
