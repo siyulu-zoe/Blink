@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
 
     // Voice guide for the calibration process in setting up Blink.
     private void calibration() {
-        String Calibration = "Hello, welcome to Blink, your personal eye remote. Before you start using Blink, we need to calibrate the sensors. Blink now for half a second. Blink now for three seconds. Three, Two, One. Thank you. You may now start using Blink. ";
+        String Calibration = "Hello, welcome to Blink, your personal eye remote. Before you start using Blink, we need to calibrate the sensors. Close your eyes now for half a second. Close your eyes now for three seconds. Three, Two, One. Thank you. You may now start using Blink. ";
         Bundle params = new Bundle();
         params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "calibration");
         t1.speak(Calibration,TextToSpeech.QUEUE_FLUSH, params,"calibration");
