@@ -57,7 +57,7 @@ public class MainActivity extends Activity {
                 public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                     final String item = (String) parent.getItemAtPosition(position);
                     switch(item) {
-                        case "Get Blinking!":
+                        case "Start Blinking!":
                             Intent intent = new Intent(MainActivity.this , BlinkActivity.class);
                             startActivity(intent);
                             break;

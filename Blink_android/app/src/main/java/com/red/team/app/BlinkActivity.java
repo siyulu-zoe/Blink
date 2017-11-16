@@ -327,7 +327,7 @@ public class BlinkActivity extends Activity {
         }
         return uuids;
     }
-    
+
     // Loop through cascading menu options. Stop reading once a blink is registered.
     private void read_list() {
         String Test1 = current_list_item;
@@ -336,7 +336,7 @@ public class BlinkActivity extends Activity {
         t1.speak(Test1,TextToSpeech.QUEUE_FLUSH, params,"test");
         ready = false;
     }
-    
+
     // Voice commands to smart home device.
     private void read_command(String input, String smart_home_device) {
         String Command = "Hey " + smart_home_device + ", ";
@@ -344,28 +344,28 @@ public class BlinkActivity extends Activity {
         params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "command");
         switch (input) {
             case "Light 1 On":
-                Command += "turn on light 1.";
+                Command += "turn on bulb 1.";
                 break;
             case "Light 1 Off":
-                Command += "turn off light 1.";
+                Command += "turn off bulb 1.";
                 break;
             case "Brighten Light 1":
-                Command += "brighten light 1.";
+                Command += "brighten bulb 1.";
                 break;
             case "Dim Light 1":
-                Command += "dim light 1.";
+                Command += "dim bulb 1.";
                 break;
             case "Light 2 On":
-                Command += "turn on light 2.";
+                Command += "turn on bulb 2.";
                 break;
             case "Light 2 Off":
-                Command += "turn off light 2.";
+                Command += "turn off bulb 2.";
                 break;
             case "Brighten Light 2":
-                Command += "brighten light 2.";
+                Command += "brighten bulb 2.";
                 break;
             case "Dim Light 2":
-                Command += "dim light 2.";
+                Command += "dim bulb 2.";
                 break;
             case "TV On":
                 Command += "turn on the TV.";
@@ -383,7 +383,7 @@ public class BlinkActivity extends Activity {
         t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
         ready = false;
     }
-    
+
     // Cascading menu options
     private void action(String selected_value) {
         switch (selected_value) {
