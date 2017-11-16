@@ -355,17 +355,17 @@ public class BlinkActivity extends Activity {
             case "Dim Light 1":
                 Command += "dim bulb 1.";
                 break;
-            case "Light 2 On":
-                Command += "turn on bulb 2.";
+            case "Light 3 On":
+                Command += "turn on bulb 3.";
                 break;
-            case "Light 2 Off":
-                Command += "turn off bulb 2.";
+            case "Light 3 Off":
+                Command += "turn off bulb 3.";
                 break;
-            case "Brighten Light 2":
-                Command += "brighten bulb 2.";
+            case "Brighten Light 3":
+                Command += "brighten bulb 3.";
                 break;
-            case "Dim Light 2":
-                Command += "dim bulb 2.";
+            case "Dim Light 3":
+                Command += "dim bulb 3.";
                 break;
             case "TV On":
                 Command += "turn on the TV.";
@@ -391,20 +391,20 @@ public class BlinkActivity extends Activity {
                 values = new String[] { "Light 1 On","Light 1 Off", "Dim Light 1","Brighten Light 1","Back"};
                 break;
             case "Light 2":
-                values = new String[] { "Light 2 On","Light 2 Off", "Dim Light 2","Brighten Light 2","Back"};
+                values = new String[] { "Light 3 On","Light 3 Off", "Dim Light 3","Brighten Light 3","Back"};
                 break;
             case "TV":
                 values = new String[] { "TV On","TV Off", "Channel Up","Channel Down","Back"};
                 break;
             case "Back":
-                values = new String[] { "Light 1", "Light 2", "TV", "End"};
+                values = new String[] { "Light 1", "Light 3", "TV", "End"};
                 break;
             case "End":
-                values = new String[] { "Light 1", "Light 2", "TV", "End"};
+                values = new String[] { "Light 1", "Light 3", "TV", "End"};
                 reading = false;
                 break;
             default:
-                values = new String[] { "Light 1", "Light 2", "TV", "End"};
+                values = new String[] { "Light 1", "Light 3", "TV", "End"};
                 read_command(selected_value,"Google"); //"Google" can be switched to "Alexa"
                 reading = false;
                 break;
