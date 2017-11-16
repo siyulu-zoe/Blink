@@ -65,6 +65,8 @@ public class MainActivity extends Activity {
                             calibration();
                             break;
                         case "Settings":
+                            Intent intentb = new Intent(MainActivity.this , SettingsActivity.class);
+                            startActivity(intentb);
                             break;
                     }
                 }
