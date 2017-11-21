@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
@@ -79,7 +80,7 @@ public class BlinkActivity extends Activity {
         // Grab references to UI elements.
         messages = (TextView) findViewById(R.id.messages);
         listview = (ListView) findViewById(R.id.actions);
-        values = new String[] { "Light 1", "Light 2", "TV", "End"};
+        values = new String[] { "Light 1", "Light 3", "TV", "Call for Nurse", "End"};
         list = new ArrayList<String>();
         for (int i = 0; i < values.length; ++i) {
             list.add(values[i]);
@@ -390,7 +391,7 @@ public class BlinkActivity extends Activity {
             case "Light 1":
                 values = new String[] { "Light 1 On","Light 1 Off", "Dim Light 1","Brighten Light 1","Back"};
                 break;
-            case "Light 2":
+            case "Light 3":
                 values = new String[] { "Light 3 On","Light 3 Off", "Dim Light 3","Brighten Light 3","Back"};
                 break;
             case "TV":
@@ -399,12 +400,22 @@ public class BlinkActivity extends Activity {
             case "Back":
                 values = new String[] { "Light 1", "Light 3", "TV", "End"};
                 break;
+            case "Call for Nurse":
+                Bundle params = new Bundle();
+                params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "call");
+                t1.speak("Calling the nurse",TextToSpeech.QUEUE_FLUSH, params,"call");
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                // Insert real phone number here.
+                callIntent.setData(Uri.parse("tel:6179597102"));
+                startActivity(callIntent);
+                ready = false;
+                break;
             case "End":
-                values = new String[] { "Light 1", "Light 3", "TV", "End"};
+                values = new String[] { "Light 1", "Light 3", "TV", "Call for Nurse", "End"};
                 reading = false;
                 break;
             default:
-                values = new String[] { "Light 1", "Light 3", "TV", "End"};
+                values = new String[] { "Light 1", "Light 3", "TV", "Call for Nurse", "End"};
                 read_command(selected_value,"Google"); //"Google" can be switched to "Alexa"
                 reading = false;
                 break;
