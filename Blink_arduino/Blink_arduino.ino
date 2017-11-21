@@ -23,15 +23,16 @@ void error(const __FlashStringHelper*err) {
   while (1);
 }
 
+//Global Variables
 int IR = 0;
 int light_threshold = 400;
-long start_time = 0;
-long old_time = 0;
-long new_time = 0;
-long time_blinking = 0;
-long intentional_threshold = 500;
-long long_threshold = 3000;
-boolean in_blink = false;
+long start_time = 0; //milli start of whole program
+long old_time = 0; //milli start of blink
+long new_time = 0; //milli end of blink
+long time_blinking = 0; //duration of blink in milli
+long intentional_threshold = 500; //milli half second "down"
+long long_threshold = 3000; //milli "up"
+boolean in_blink = false; //it is blinking?
 
 void setup(void)
 {
@@ -61,13 +62,19 @@ void setup(void)
   /* Print Bluefruit information */
   ble.info();
   Serial.println(F("Please use Adafruit Bluefruit LE app to connect in UART mode"));
+  
+  //WILL STOP HERE UNTIL CONNECTED TO PHONE APP//
+  
   Serial.println(F("Then Enter characters to send to Bluefruit"));
   Serial.println();
   ble.verbose(false);  // debug info is a little annoying after this point!
+
+  
   /* Wait for connection */
   while (! ble.isConnected()) {
       delay(500);
   }
+  
   Serial.println(F("******************************"));
   // LED Activity command is only supported from 0.6.6
   if ( ble.isVersionAtLeast(MINIMUM_FIRMWARE_VERSION) )
@@ -91,12 +98,12 @@ void loop(void)
   IR = analogRead(A5);
   if (IR < light_threshold) {
     if (in_blink == false) { //if past the threshold for first instance start timer (old time) and say its in a blink
-      old_time = millis();
-      in_blink = true;
+      old_time = millis(); //get start time stamps
+      in_blink = true; //in bink = true
     }
   }
   else {
-    if (in_blink == true) { //if back from threshold and first time back, end timer (new time) and calculate difference in time
+    if (in_blink == true) { //if back from threshold and first time above, end timer (new time) and calculate difference in time
       in_blink = false;
       new_time = millis();
       time_blinking = new_time - old_time;
@@ -110,7 +117,7 @@ void loop(void)
         else { //if below long threshold then send short blink signal
           ble.print("down");
           //Serial.print("down");
-          delay(1000);
+          delay(750);
         }
       }
     }
