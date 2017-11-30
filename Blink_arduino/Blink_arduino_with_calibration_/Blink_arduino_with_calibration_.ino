@@ -74,9 +74,9 @@ void setup(void)
 
   
   /* Wait for connection */
-  while (! ble.isConnected()) {
-      delay(500);
-  }
+//   while (! ble.isConnected()) {
+//       delay(500);
+//   }
   
   Serial.println(F("******************************"));
   // LED Activity command is only supported from 0.6.6
@@ -92,6 +92,9 @@ void setup(void)
   Serial.println(F("******************************"));
   start_time = millis();
   delay(100);
+  
+  pinMode(10, OUTPUT);
+  digitalWrite(10,HIGH);
 }
 int calibrate(void){
     int time1=0;
@@ -135,7 +138,7 @@ void loop(void)
     calibration= false;
     }
     
-  IR = analogRead(A2);
+  IR = analogRead(A3);
   if (IR < light_threshold) {
     if (in_blink == false) { //if past the threshold for first instance start timer (old time) and say its in a blink
       old_time = millis(); //get start time stamps
