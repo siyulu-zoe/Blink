@@ -70,6 +70,8 @@ public class BlinkActivity extends Activity {
     private Boolean leaf = false;
     private StableArrayAdapter list_adapter;
     private TextToSpeech t1;
+    private int lower_bound;
+    private int upper_bound;
 
     // OnCreate, called once to initialize the activity.
     @Override
@@ -374,11 +376,26 @@ public class BlinkActivity extends Activity {
             case "TV Off":
                 Command += "turn off the TV.";
                 break;
+            case "ESPN":
+                Command += "turn on ESPN."; //should turn on TV and go to ESPN
+                break;
+            case "Low":
+                Command += "set the volume to 12 on Fire TV.";
+                break;
+            case "Medium":
+                Command += "set the volume to 20 on Fire TV.";
+                break;
+            case "High":
+                Command += "set the volume to 28 on Fire TV.";
+                break;
+            case "Guide":
+                Command += "go to the TV guide.";
+                break;
             case "Channel Up":
-                Command += "go to the next channel on the TV.";
+                Command += "channel up.";
                 break;
             case "Channel Down":
-                Command += "go to the previous channel on the TV.";
+                Command += "channel down.";
                 break;
         }
         t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
@@ -395,10 +412,10 @@ public class BlinkActivity extends Activity {
                 values = new String[] { "Light 3 On","Light 3 Off", "Dim Light 3","Brighten Light 3","Back"};
                 break;
             case "TV":
-                values = new String[] { "TV On","TV Off", "Channel Up","Channel Down","Back"};
+                values = new String[] { "TV On","TV Off", "Favorites", "Guide", "Volume", "Channel Up","Channel Down","Back"};
                 break;
             case "Back":
-                values = new String[] { "Light 1", "Light 3", "TV", "End"};
+                values = new String[] { "Light 1", "Light 3", "TV", "Call for Nurse", "End"};
                 break;
             case "Call for Nurse":
                 Bundle params = new Bundle();
@@ -414,6 +431,12 @@ public class BlinkActivity extends Activity {
                 values = new String[] { "Light 1", "Light 3", "TV", "Call for Nurse", "End"};
                 reading = false;
                 break;
+            case "Favorites":
+                values = new String[] { "ESPN", "Discovery", "Back"}; //Back needs to be fixed
+                break;
+            case "Volume":
+                values = new String[] { "Low", "Medium", "High"}; //Back needs to be fixed
+                break;         
             default:
                 values = new String[] { "Light 1", "Light 3", "TV", "Call for Nurse", "End"};
                 read_command(selected_value,"Google"); //"Google" can be switched to "Alexa"
