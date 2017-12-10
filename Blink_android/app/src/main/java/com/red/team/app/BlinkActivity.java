@@ -212,7 +212,7 @@ public class BlinkActivity extends Activity {
         // Scan for all BTLE devices.
         // The first one with the UART service will be chosen--see the code in the scanCallback.
         messages.setText("Scanning for devices...");
-        adapter.startLeScan(scanCallback);
+        //adapter.startLeScan(scanCallback);
     }
 
     // BTLE device scanning callback.
@@ -344,35 +344,23 @@ public class BlinkActivity extends Activity {
         Bundle params = new Bundle();
         params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "command");
         switch (input) {
-            case "Light 1 On":
-                Command += "turn on bulb 1.";
+            case "On":
+                Command += "turn on the bulb.";
                 break;
-            case "Light 1 Off":
-                Command += "turn off bulb 1.";
+            case "Off":
+                Command += "turn off the bulb.";
                 break;
-            case "Brighten Light 1":
-                Command += "brighten bulb 1.";
+            case "Brighten":
+                Command += "brighten the bulb.";
                 break;
-            case "Dim Light 1":
-                Command += "dim bulb 1.";
-                break;
-            case "Light 3 On":
-                Command += "turn on bulb 3.";
-                break;
-            case "Light 3 Off":
-                Command += "turn off bulb 3.";
-                break;
-            case "Brighten Light 3":
-                Command += "brighten bulb 3.";
-                break;
-            case "Dim Light 3":
-                Command += "dim bulb 3.";
+            case "Dim":
+                Command += "dim the bulb.";
                 break;
             case "TV On":
-                Command += "turn on the TV.";
+                Command += "turn on Fire TV.";
                 break;
             case "TV Off":
-                Command += "turn off the TV.";
+                Command += "turn off Fire TV.";
                 break;
             case "Plex":
                 Command += "go to Plex.";
@@ -412,11 +400,8 @@ public class BlinkActivity extends Activity {
     // Cascading menu options
     private void action(String selected_value) {
         switch (selected_value) {
-            case "Light 1":
-                values = new String[] { "Light 1 On", "Light 1 Off", "Dim Light 1", "Brighten Light 1", "Back"};
-                break;
-            case "Light 3":
-                values = new String[] { "Light 3 On", "Light 3 Off", "Dim Light 3", "Brighten Light 3", "Back"};
+            case "Lights":
+                values = new String[] { "On", "Off", "Dim", "Brighten", "Back"};
                 break;
             case "TV":
                 values = new String[] { "Play", "TV On", "TV Off", "Favorites", "Home", "Volume", "Channel", "Back"};
@@ -431,7 +416,7 @@ public class BlinkActivity extends Activity {
                 values = new String[] { "Up", "Down"};
                 break;
             case "Back":
-                values = new String[] { "Light 1", "Light 3", "TV", "Call for Nurse", "End"};
+                values = new String[] { "Lights", "TV", "Call for Nurse", "End"};
                 break;
             case "Call for Nurse":
                 Bundle params = new Bundle();
@@ -444,12 +429,12 @@ public class BlinkActivity extends Activity {
                 ready = false;
                 break;
             case "End":
-                values = new String[] { "Light 1", "Light 3", "TV", "Call for Nurse", "End"};
+                values = new String[] { "Lights", "TV", "Call for Nurse", "End"};
                 reading = false;
                 break;        
             default:
-                values = new String[] { "Light 1", "Light 3", "TV", "Call for Nurse", "End"};
-                read_command(selected_value,"Alexa"); //"Google" can be switched to "Alexa"
+                values = new String[] { "Lights", "TV", "Call for Nurse", "End"};
+                read_command(selected_value,"Alexa"); //"Google" or "Alexa"
                 reading = false;
                 break;
         }
