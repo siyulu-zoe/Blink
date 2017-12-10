@@ -212,7 +212,7 @@ public class BlinkActivity extends Activity {
         // Scan for all BTLE devices.
         // The first one with the UART service will be chosen--see the code in the scanCallback.
         messages.setText("Scanning for devices...");
-        //adapter.startLeScan(scanCallback);
+        adapter.startLeScan(scanCallback);
     }
 
     // BTLE device scanning callback.
