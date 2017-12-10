@@ -2,6 +2,8 @@ package com.red.team.app;
 
 import android.app.Activity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -13,6 +15,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by David Favela on 11/14/2017
@@ -20,19 +26,36 @@ import java.util.ArrayList;
 
 public class SettingsActivity extends Activity {
 
+    private String[] defaultMenu;
+    private ArrayList<String> list;
+    private Set<String> mset;
+
+    Intent intent = new Intent(this,SettingsActivity.class);
+
     // OnCreate, called once to initialize the activity.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
 
+        SharedPreferences mPrefs = getSharedPreferences("list",MODE_PRIVATE);
+        final SharedPreferences.Editor mEditor = mPrefs.edit();
+
         // Grab references to UI elements.
         final ListView listView = (ListView) findViewById(R.id.listView);
-        final String[] menu = new String[]{"Lights 1", "Lights 2", "TV"};
-        final ArrayList<String> list = new ArrayList<String>();
-        for (int i = 0; i < menu.length; ++i) {
-            list.add(menu[i]);
+        defaultMenu = new String[]{"Lights 1", "Lights 2", "TV","Call For Nurse", "End"};
+
+
+        if (savedInstanceState != null) {
+            list = savedInstanceState.getStringArrayList("savedList");
+            mEditor.putStringSet("listSet", new HashSet<>(list));
+            mEditor.commit();
         }
+
+        mset = mPrefs.getStringSet("listSet",new HashSet<>(Arrays.asList(defaultMenu)));
+        mEditor.commit();
+
+        list = new ArrayList<>(mset);
 
         final ButtonAdapter buttonAdapter = new ButtonAdapter(list, this);
         listView.setAdapter(buttonAdapter);
@@ -62,7 +85,12 @@ public class SettingsActivity extends Activity {
                 if (i == EditorInfo.IME_ACTION_DONE) {
                     list.add(addText.getText().toString());
                     ((BaseAdapter) listView.getAdapter()).notifyDataSetChanged();
-                    System.out.println(list);
+
+                    mEditor.putStringSet("listSet", new HashSet<>(list));
+                    mEditor.commit();
+
+                    textView.setText("");
+
                     handled = true;
                 }
                 return handled;
@@ -70,4 +98,40 @@ public class SettingsActivity extends Activity {
         });
 
     }
+
+    //Saves inputted list when changing orientation
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList("savedList",list);
+    }
+
+
+    //Returns inputted list when changing orientation
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        SharedPreferences mPrefs = getSharedPreferences("list",MODE_PRIVATE);
+        final SharedPreferences.Editor mEditor = mPrefs.edit();
+
+        list = savedInstanceState.getStringArrayList("savedList");
+
+        mEditor.putStringSet("listSet", new HashSet<>(list));
+        mEditor.commit();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        SharedPreferences mPrefs = getSharedPreferences("list",MODE_PRIVATE);
+        final SharedPreferences.Editor mEditor = mPrefs.edit();
+
+        mEditor.putStringSet("listSet", new HashSet<>(list));
+        mEditor.commit();
+
+        intent.putExtra("list",list);
+    }
+
 }
