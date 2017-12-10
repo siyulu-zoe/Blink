@@ -5,19 +5,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ListAdapter;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import static android.graphics.Color.argb;
+
 
 /**
  * Created by David Favela on 11/15/2017.
  **/
 
 public class ButtonAdapter extends BaseAdapter implements ListAdapter{
-    private ArrayList<String> list = new ArrayList<String>();
+    private ArrayList<String> list = new ArrayList<>();
     private Context context;
+
 
     public ButtonAdapter(ArrayList<String> list, Context context){
         this.list = list;
@@ -46,16 +50,24 @@ public class ButtonAdapter extends BaseAdapter implements ListAdapter{
             view = inflater.inflate(R.layout.button, null);
         }
 
-        TextView listItemText = (TextView)view.findViewById(R.id.textView);
+        final TextView listItemText = (TextView)view.findViewById(R.id.textView);
         listItemText.setText(list.get(position));
 
-        ImageButton deletebtn = (ImageButton) view.findViewById(R.id.Delete);
+        final Switch settingsSwitch = (Switch) view.findViewById(R.id.settingsSwitch);
 
-        deletebtn.setOnClickListener(new View.OnClickListener() {
+        settingsSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                list.remove(position);
-                notifyDataSetChanged();
+                Boolean switchState = settingsSwitch.isChecked();
+                if (switchState) {
+                    settingsSwitch.setChecked(false);
+                    listItemText.setTextColor(argb(100,0,0,0));
+                    notifyDataSetChanged();
+                } else {
+                    settingsSwitch.setChecked(true);
+                    listItemText.setTextColor(argb(255,0,0,0));
+                    notifyDataSetChanged();
+                }
             }
         });
 
