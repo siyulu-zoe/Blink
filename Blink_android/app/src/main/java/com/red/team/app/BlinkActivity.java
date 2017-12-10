@@ -70,8 +70,6 @@ public class BlinkActivity extends Activity {
     private Boolean leaf = false;
     private StableArrayAdapter list_adapter;
     private TextToSpeech t1;
-    private int lower_bound;
-    private int upper_bound;
 
     // OnCreate, called once to initialize the activity.
     @Override
@@ -214,7 +212,7 @@ public class BlinkActivity extends Activity {
         // Scan for all BTLE devices.
         // The first one with the UART service will be chosen--see the code in the scanCallback.
         messages.setText("Scanning for devices...");
-        adapter.startLeScan(scanCallback);
+        //adapter.startLeScan(scanCallback);
     }
 
     // BTLE device scanning callback.
@@ -415,16 +413,16 @@ public class BlinkActivity extends Activity {
     private void action(String selected_value) {
         switch (selected_value) {
             case "Light 1":
-                values = new String[] { "Light 1 On","Light 1 Off", "Dim Light 1","Brighten Light 1","Back"};
+                values = new String[] { "Light 1 On", "Light 1 Off", "Dim Light 1", "Brighten Light 1", "Back"};
                 break;
             case "Light 3":
-                values = new String[] { "Light 3 On","Light 3 Off", "Dim Light 3","Brighten Light 3","Back"};
+                values = new String[] { "Light 3 On", "Light 3 Off", "Dim Light 3", "Brighten Light 3", "Back"};
                 break;
             case "TV":
-                values = new String[] { "Play," "TV On","TV Off", "Favorites", "Home", "Volume", "Channel", "Back"};
+                values = new String[] { "Play", "TV On", "TV Off", "Favorites", "Home", "Volume", "Channel", "Back"};
                 break;
             case "Favorites":
-                values = new String[] { "ESPN", "Plex,", "NBC"};
+                values = new String[] { "ESPN", "Plex", "NBC"};
                 break;
             case "Volume":
                 values = new String[] { "Low", "Medium", "High"};
