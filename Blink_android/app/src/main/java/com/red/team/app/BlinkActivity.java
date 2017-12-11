@@ -86,7 +86,7 @@ public class BlinkActivity extends Activity {
             list.add(values[i]);
         }
         list_adapter = new StableArrayAdapter(this,
-                android.R.layout.simple_list_item_1, list);
+                R.layout.blink_list, list);
         list_adapter.notifyDataSetChanged();
         listview.setAdapter(list_adapter);
         current_list_size = values.length;
