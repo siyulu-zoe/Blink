@@ -63,7 +63,7 @@ public class MainActivity extends Activity {
                             startActivity(intent);
                             break;
                         case "Calibration":
-                            calibration();
+                            //calibration(); //voice guide disabled
                             break;
                         case "Settings":
                             Intent intentb = new Intent(MainActivity.this , SettingsActivity.class);
