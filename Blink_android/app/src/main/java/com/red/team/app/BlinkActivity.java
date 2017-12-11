@@ -368,7 +368,7 @@ public class BlinkActivity extends Activity {
                 Command += "turn off Fire TV.";
                 break;
             case "Plex":
-                Command += "go to Plex.";
+                Command += "open Plex.";
                 break;
             case "ESPN":
                 Command += "go to ESPN.";
