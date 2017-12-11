@@ -5,9 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
@@ -49,13 +51,25 @@ public class ButtonAdapter extends BaseAdapter implements ListAdapter{
         TextView listItemText = (TextView)view.findViewById(R.id.textView);
         listItemText.setText(list.get(position));
 
-        ImageButton deletebtn = (ImageButton) view.findViewById(R.id.Delete);
 
-        deletebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                list.remove(position);
-                notifyDataSetChanged();
+//        ImageButton deletebtn = (ImageButton) view.findViewById(R.id.Delete);
+//
+//        deletebtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                list.remove(position);
+//                notifyDataSetChanged();
+//            }
+//        });
+
+        ToggleButton onoff_toggle = (ToggleButton) view.findViewById(R.id.Delete);
+        onoff_toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // The toggle is enabled
+                } else {
+                    // The toggle is disabled
+                }
             }
         });
 
