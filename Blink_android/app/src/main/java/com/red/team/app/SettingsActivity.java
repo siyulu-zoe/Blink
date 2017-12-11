@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -18,7 +19,10 @@ import java.util.ArrayList;
  * Created by David Favela on 11/14/2017
  */
 
+
 public class SettingsActivity extends Activity {
+
+    private String[] values;
 
     // OnCreate, called once to initialize the activity.
     @Override
@@ -28,7 +32,7 @@ public class SettingsActivity extends Activity {
 
         // Grab references to UI elements.
         final ListView listView = (ListView) findViewById(R.id.listView);
-        final String[] menu = new String[]{"Lights 1", "Lights 2", "TV"};
+        final String[] menu = new String[]{"Lamp", "TV", "Call for Nurse"};
         final ArrayList<String> list = new ArrayList<String>();
         for (int i = 0; i < menu.length; ++i) {
             list.add(menu[i]);

@@ -80,7 +80,7 @@ public class BlinkActivity extends Activity {
         // Grab references to UI elements.
         messages = (TextView) findViewById(R.id.messages);
         listview = (ListView) findViewById(R.id.actions);
-        values = new String[] { "Light 1", "Light 3", "TV", "Call for Nurse", "End"};
+        values = new String[] {"Lamp", "TV", "Call for Nurse", "End"};
         list = new ArrayList<String>();
         for (int i = 0; i < values.length; ++i) {
             list.add(values[i]);
@@ -345,16 +345,16 @@ public class BlinkActivity extends Activity {
         params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "command");
         switch (input) {
             case "On":
-                Command += "turn on the bulb.";
+                Command += "turn on the lamp.";
                 break;
             case "Off":
-                Command += "turn off the bulb.";
+                Command += "turn off the lamp.";
                 break;
             case "Brighten":
-                Command += "brighten the bulb.";
+                Command += "brighten the lamp.";
                 break;
             case "Dim":
-                Command += "dim the bulb.";
+                Command += "dim the lamp.";
                 break;
             case "TV On":
                 Command += "turn on Fire TV.";
@@ -416,7 +416,7 @@ public class BlinkActivity extends Activity {
                 values = new String[] { "Up", "Down"};
                 break;
             case "Back":
-                values = new String[] { "Lights", "TV", "Call for Nurse", "End"};
+                values = new String[] { "Lamp", "TV", "Call for Nurse", "End"};
                 break;
             case "Call for Nurse":
                 Bundle params = new Bundle();
@@ -429,11 +429,11 @@ public class BlinkActivity extends Activity {
                 ready = false;
                 break;
             case "End":
-                values = new String[] { "Lights", "TV", "Call for Nurse", "End"};
+                values = new String[] { "Lamp", "TV", "Call for Nurse", "End"};
                 reading = false;
                 break;        
             default:
-                values = new String[] { "Lights", "TV", "Call for Nurse", "End"};
+                values = new String[] { "Lamp", "TV", "Call for Nurse", "End"};
                 read_command(selected_value,"Alexa"); //"Google" or "Alexa"
                 reading = false;
                 break;

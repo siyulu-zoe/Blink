@@ -3,4 +3,11 @@
 
     <string name="app_name">Blink</string>
 
+    <string-array name="main_list">
+        <item>Lamp</item>
+        <item>TV</item>
+        <item>Call for Nurse</item>
+        <item>End</item>
+    </string-array>
+
 </resources>

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class ButtonAdapter extends BaseAdapter implements ListAdapter{
     private ArrayList<String> list = new ArrayList<String>();
     private Context context;
+    private String[] values;
 
     public ButtonAdapter(ArrayList<String> list, Context context){
         this.list = list;
@@ -49,6 +50,29 @@ public class ButtonAdapter extends BaseAdapter implements ListAdapter{
         TextView listItemText = (TextView)view.findViewById(R.id.textView);
         listItemText.setText(list.get(position));
 
+        listItemText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String item = (String)((TextView) v).getText();
+                switch (item) {
+                    case "Lamp":
+                        values = new String[]{"On", "Off", "Dim", "Brighten", "Back"};
+                        break;
+                    case "TV":
+                        values = new String[]{"Play", "TV On", "TV Off", "Favorites", "Home", "Volume", "Channel", "Back"};
+                        break;
+                    case "Back":
+                        values = new String[] { "Lamp", "TV", "Call for Nurse"};
+                        break;
+                }
+                list.clear();
+                for (int i = 0; i < values.length; ++i) {
+                    list.add(values[i]);
+                }
+                notifyDataSetChanged();
+            }
+        });
+
         ImageButton deletebtn = (ImageButton) view.findViewById(R.id.Delete);
 
         deletebtn.setOnClickListener(new View.OnClickListener() {
@@ -58,6 +82,7 @@ public class ButtonAdapter extends BaseAdapter implements ListAdapter{
                 notifyDataSetChanged();
             }
         });
+
 
         return view;
     }
