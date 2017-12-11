@@ -2,8 +2,10 @@ package com.red.team.app;
 
 import android.app.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
@@ -24,7 +26,7 @@ import java.util.ArrayList;
 
 public class SettingsActivity extends Activity {
 
-    private String[] values;
+    private String[] menu;
 
     // OnCreate, called once to initialize the activity.
     @Override
@@ -32,9 +34,14 @@ public class SettingsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
 
+        getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle("Settings");
+        getActionBar().setIcon(R.mipmap.ic_logo);
+
         // Grab references to UI elements.
         final ListView listView = (ListView) findViewById(R.id.listView);
-        final String[] menu = new String[]{"Lamp", "TV", "Call for Nurse"};
+        menu = new String[]{"Lamp", "TV", "Call for Nurse"};
         final ArrayList<String> list = new ArrayList<String>();
         for (int i = 0; i < menu.length; ++i) {
             list.add(menu[i]);
@@ -75,5 +82,55 @@ public class SettingsActivity extends Activity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (((TextView)this.findViewById(R.id.textView)).getText() == "Lamp") {
+                Intent myIntent = new Intent(this, MainActivity.class);
+                myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(myIntent);
+                finish();
+            }
+           else {
+                final ListView listView = (ListView) findViewById(R.id.listView);
+                menu = new String[]{"Lamp", "TV", "Call for Nurse"};
+                final ArrayList<String> list = new ArrayList<String>();
+                for (int i = 0; i < menu.length; ++i) {
+                    list.add(menu[i]);
+                }
+
+                final ButtonAdapter buttonAdapter = new ButtonAdapter(list, this);
+                listView.setAdapter(buttonAdapter);
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (((TextView)this.findViewById(R.id.textView)).getText() == "Lamp") {
+                    Intent myIntent = new Intent(this, MainActivity.class);
+                    myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(myIntent);
+                    finish();
+                }
+                else {
+                    final ListView listView = (ListView) findViewById(R.id.listView);
+                    menu = new String[]{"Lamp", "TV", "Call for Nurse"};
+                    final ArrayList<String> list = new ArrayList<String>();
+                    for (int i = 0; i < menu.length; ++i) {
+                        list.add(menu[i]);
+                    }
+
+                    final ButtonAdapter buttonAdapter = new ButtonAdapter(list, this);
+                    listView.setAdapter(buttonAdapter);
+                }
+                break;
+        }
+        return true;
     }
 }

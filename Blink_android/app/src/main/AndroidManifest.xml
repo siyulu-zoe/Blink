@@ -10,6 +10,7 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
+        android:logo="@mipmap/ic_logo"
         android:label="@string/app_name"
         android:theme="@style/blinkTheme" >
         <activity
@@ -23,8 +24,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.red.team.app.BlinkActivity"></activity>
-        <activity android:name="com.red.team.app.SettingsActivity"></activity>
+        <activity android:name="com.red.team.app.BlinkActivity"
+            android:parentActivityName="com.red.team.app.MainActivity">
+        </activity>
+        <activity android:name="com.red.team.app.SettingsActivity"
+            android:parentActivityName="com.red.team.app.MainActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -12,7 +12,8 @@
         android:padding="15dp"
         android:text=""
         android:textSize="30sp"
-        android:textColor="@android:color/primary_text_light"/>
+        android:textColor="@android:color/primary_text_light"
+        android:fontFamily="sans-serif-thin"/>
 
     <Switch
         android:id="@+id/Delete"

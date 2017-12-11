@@ -14,6 +14,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.speech.tts.UtteranceProgressListener;
+import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -76,6 +78,9 @@ public class BlinkActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.blink_activity);
+
+        getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Grab references to UI elements.
         messages = (TextView) findViewById(R.id.messages);
@@ -397,26 +402,98 @@ public class BlinkActivity extends Activity {
         ready = false;
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (list.size()==4) {
+                Intent myIntent = new Intent(this, MainActivity.class);
+                myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(myIntent);
+                finish();
+            }
+            else {
+                values = new String[] { "Lamp", "TV", "Call for Nurse", "End"};
+                final ListView listView = (ListView) findViewById(R.id.listView);
+                list = new ArrayList<String>();
+                for (int i = 0; i < values.length; ++i) {
+                    list.add(values[i]);
+                }
+                list_adapter = new StableArrayAdapter(getBaseContext(),
+                        R.layout.blink_list, list);
+                current_list_value = 0;
+                current_list_size = values.length;
+                current_list_item = values[current_list_value];
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        listview.setAdapter(list_adapter);
+                    }
+                });
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (list.size()==4) {
+                    Intent myIntent = new Intent(this, MainActivity.class);
+                    myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(myIntent);
+                    finish();
+                }
+                else {
+                    values = new String[] { "Lamp", "TV", "Call for Nurse", "End"};
+                    final ListView listView = (ListView) findViewById(R.id.listView);
+                    list = new ArrayList<String>();
+                    for (int i = 0; i < values.length; ++i) {
+                        list.add(values[i]);
+                    }
+                    list_adapter = new StableArrayAdapter(getBaseContext(),
+                            R.layout.blink_list, list);
+                    current_list_value = 0;
+                    current_list_size = values.length;
+                    current_list_item = values[current_list_value];
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            listview.setAdapter(list_adapter);
+                        }
+                    });
+                }
+                break;
+        }
+        return true;
+    }
+
     // Cascading menu options
     private void action(String selected_value) {
         switch (selected_value) {
             case "Lamp":
                 values = new String[] { "On", "Off", "Dim", "Brighten", "Back"};
+                setTitle("Blink: Lamp");
                 break;
             case "TV":
                 values = new String[] { "Play", "TV On", "TV Off", "Favorites", "Home", "Volume", "Channel", "Back"};
+                setTitle("Blink: TV");
                 break;
             case "Favorites":
                 values = new String[] { "ESPN", "Plex", "NBC"};
+                setTitle("Blink: TV Favorites");
                 break;
             case "Volume":
                 values = new String[] { "Low", "Medium", "High"};
-                break; 
+                setTitle("Blink: TV Volume");
+                break;
             case "Channel":
                 values = new String[] { "Up", "Down"};
+                setTitle("Blink: TV Channel");
                 break;
             case "Back":
                 values = new String[] { "Lamp", "TV", "Call for Nurse", "End"};
+                setTitle("Blink");
                 break;
             case "Call for Nurse":
                 Bundle params = new Bundle();
@@ -427,15 +504,18 @@ public class BlinkActivity extends Activity {
                 callIntent.setData(Uri.parse("tel:6179597102"));
                 startActivity(callIntent);
                 ready = false;
+                setTitle("Blink");
                 break;
             case "End":
                 values = new String[] { "Lamp", "TV", "Call for Nurse", "End"};
                 reading = false;
-                break;        
+                setTitle("Blink");
+                break;
             default:
                 values = new String[] { "Lamp", "TV", "Call for Nurse", "End"};
                 read_command(selected_value,"Alexa"); //"Google" or "Alexa"
                 reading = false;
+                setTitle("Blink");
                 break;
         }
 

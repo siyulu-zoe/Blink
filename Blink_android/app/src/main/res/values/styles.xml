@@ -7,6 +7,7 @@
         <item name="android:statusBarColor">@android:color/holo_red_dark</item>
         <item name="android:colorAccent">@android:color/holo_red_dark</item>
         <item name="android:colorPrimary">@android:color/holo_red_dark</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
     </style>
 
 

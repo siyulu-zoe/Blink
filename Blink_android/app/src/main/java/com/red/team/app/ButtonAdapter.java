@@ -59,13 +59,15 @@ public class ButtonAdapter extends BaseAdapter implements ListAdapter{
                 final String item = (String)((TextView) v).getText();
                 switch (item) {
                     case "Lamp":
-                        values = new String[]{"On", "Off", "Dim", "Brighten", "Back"};
+                        values = new String[]{"On", "Off", "Dim", "Brighten"};
+                        ((SettingsActivity) context).setTitle("Settings: Lamp");
                         break;
                     case "TV":
-                        values = new String[]{"Play", "TV On", "TV Off", "Favorites", "Home", "Volume", "Channel", "Back"};
+                        values = new String[]{"Play", "TV On", "TV Off", "Favorites", "Home", "Volume", "Channel"};
+                        ((SettingsActivity) context).setTitle("Settings: TV");
                         break;
-                    case "Back":
-                        values = new String[] { "Lamp", "TV", "Call for Nurse"};
+                    case "Call for Nurse":
+                        values = new String[]{"Lamp","TV","Call for Nurse"};
                         break;
                 }
                 list.clear();
