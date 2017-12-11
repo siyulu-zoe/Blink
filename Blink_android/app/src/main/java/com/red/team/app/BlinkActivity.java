@@ -346,55 +346,88 @@ public class BlinkActivity extends Activity {
         switch (input) {
             case "On":
                 Command += "turn on the lamp.";
+                t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
+                ready = false;
                 break;
             case "Off":
                 Command += "turn off the lamp.";
+                t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
+                ready = false;
                 break;
             case "Brighten":
                 Command += "brighten the lamp.";
+                t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
+                ready = false;
                 break;
             case "Dim":
                 Command += "dim the lamp.";
+                t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
+                ready = false;
                 break;
             case "TV On":
-                Command += "turn on the TV.";
+                Command += "turn on Fire TV.";
+                t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
+                ready = false;
                 break;
             case "TV Off":
-                Command += "turn off the TV.";
+                Command += "turn off Fire TV.";
+                t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
+                ready = false;
                 break;
             case "Plex":
                 Command += "open Plex.";
+                t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
+                Thread.sleep(5000);
+                t1.speak("Alexa, play.",TextToSpeech.QUEUE_FLUSH, params,"command");
+                ready = false;
                 break;
             case "ESPN":
                 Command += "go to ESPN.";
+                t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
+                ready = false;
                 break;
             case "NBC":
                 Command += "go to NBC.";
+                t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
+                ready = false;
                 break;
             case "Low":
                 Command += "set the volume to 12 on Fire TV.";
+                t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
+                ready = false;
                 break;
             case "Medium":
                 Command += "set the volume to 20 on Fire TV.";
+                t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
+                ready = false;
                 break;
             case "High":
                 Command += "set the volume to 28 on Fire TV.";
+                t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
+                ready = false;
                 break;
             case "Home":
                 Command += "go home.";
+                t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
+                ready = false;
                 break;
             case "Up":
                 Command += "channel up.";
+                t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
+                ready = false;
                 break;
             case "Down":
                 Command += "channel down.";
+                t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
+                ready = false;
                 break;
             case "Play":
                 Command += "play.";
+                t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
+                ready = false;
                 break;
         }
-        t1.speak(Command,TextToSpeech.QUEUE_FLUSH, params,"command");
-        ready = false;
+        
     }
 
     // Cascading menu options

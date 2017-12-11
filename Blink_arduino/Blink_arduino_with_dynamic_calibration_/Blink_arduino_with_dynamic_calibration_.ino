@@ -36,7 +36,7 @@ boolean in_blink = false; //it is blinking?
 
 bool calibration= true;
 int calibration_values[300];
-int pin=A2;
+int pin=A1;
 int dcounter=0;
 long daverage=0;
 long dsum=0;
@@ -44,7 +44,7 @@ long dsum=0;
 
 void setup(void)
 {
-  pinMode(A2, INPUT);
+  pinMode(pin, INPUT);
   pinMode(13, OUTPUT);
   digitalWrite(13, HIGH);
 //  while (!Serial);  // required for Flora & Micro
@@ -109,7 +109,7 @@ int calibrate(void){
     time1=millis();
     for (int i=0; i <= 299; i++){
       calibration_values[i]= analogRead(pin);
-      delay(5);
+      delay(10);
         }
      time2=millis();
      int counter=0;
