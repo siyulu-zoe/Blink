@@ -86,7 +86,7 @@ public class BlinkActivity extends Activity {
             list.add(values[i]);
         }
         list_adapter = new StableArrayAdapter(this,
-                android.R.layout.simple_list_item_1, list);
+                R.layout.blink_list, list);
         list_adapter.notifyDataSetChanged();
         listview.setAdapter(list_adapter);
         current_list_size = values.length;
@@ -400,7 +400,7 @@ public class BlinkActivity extends Activity {
     // Cascading menu options
     private void action(String selected_value) {
         switch (selected_value) {
-            case "Lights":
+            case "Lamp":
                 values = new String[] { "On", "Off", "Dim", "Brighten", "Back"};
                 break;
             case "TV":
@@ -444,7 +444,7 @@ public class BlinkActivity extends Activity {
             list.add(values[i]);
         }
         list_adapter = new StableArrayAdapter(getBaseContext(),
-                android.R.layout.simple_list_item_1, list);
+                R.layout.blink_list, list);
         current_list_value = 0;
         current_list_size = values.length;
         current_list_item = values[current_list_value];

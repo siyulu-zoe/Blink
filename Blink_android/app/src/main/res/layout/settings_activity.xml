@@ -8,19 +8,25 @@
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_above="@+id/Add"
         android:layout_toEndOf="@+id/AddText">
 
     </ListView>
 
-    <ImageButton
+    <TextView
         android:id="@+id/Add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:src="@android:drawable/ic_input_add" />
+        android:clickable="true"
+        android:text="+ ADD"
+        android:paddingLeft="10dp"
+        android:padding="15dp"
+        android:textSize="30sp"
+        android:textColor="@android:color/holo_red_dark"/>
 
     <EditText
         android:id="@+id/AddText"

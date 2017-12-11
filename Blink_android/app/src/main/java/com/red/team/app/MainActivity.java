@@ -1,5 +1,6 @@
 package com.red.team.app;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,7 +29,7 @@ public class MainActivity extends Activity {
                 list.add(values[i]);
             }
             final StableArrayAdapter adapter = new StableArrayAdapter(this,
-                    android.R.layout.simple_list_item_1, list);
+                    R.layout.blink_list, list);
             listview.setAdapter(adapter);
 
             t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {

@@ -9,24 +9,19 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:paddingLeft="10dp"
+        android:padding="15dp"
         android:text=""
-        android:textSize="35sp" />
-
-    <!--<ImageButton-->
-        <!--android:id="@+id/Delete"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_marginTop="5dp"-->
-        <!--android:src="@android:drawable/ic_delete" />-->
+        android:textSize="30sp"
+        android:textColor="@android:color/primary_text_light"/>
 
     <Switch
         android:id="@+id/Delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:checked="true"
-        />
+        android:layout_centerHorizontal="false"
+        android:layout_centerVertical="true"
+        android:checked="true" />
 
     <EditText
         android:id="@+id/AddText"

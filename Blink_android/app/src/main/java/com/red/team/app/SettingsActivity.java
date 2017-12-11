@@ -13,6 +13,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 /**
@@ -41,7 +43,7 @@ public class SettingsActivity extends Activity {
         final ButtonAdapter buttonAdapter = new ButtonAdapter(list, this);
         listView.setAdapter(buttonAdapter);
 
-        ImageButton addDevice = (ImageButton) findViewById(R.id.Add);
+        TextView addDevice = (TextView) findViewById(R.id.Add);
         final EditText addText = (EditText) findViewById(R.id.AddText);
 
         //toggles input text box visibility
