@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -51,7 +52,7 @@ public class ButtonAdapter extends BaseAdapter implements ListAdapter{
 
         TextView listItemText = (TextView)view.findViewById(R.id.textView);
         listItemText.setText(list.get(position));
-        
+
         listItemText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,7 +76,7 @@ public class ButtonAdapter extends BaseAdapter implements ListAdapter{
             }
         });
 
-        ToggleButton onoff_toggle = (ToggleButton) view.findViewById(R.id.Delete);
+        Switch onoff_toggle = (Switch) view.findViewById(R.id.Delete);
         onoff_toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
